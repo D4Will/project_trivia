@@ -7,7 +7,7 @@ import random
 from models import setup_db, Question, Category
 
 QUESTIONS_PER_PAGE = 10
-CATEGORY_LIST = ['Science', 'Art', 'Geography', 'History', 'Entertainment', 'Sports']
+CATEGORY_LIST = ['science', 'art', 'geography', 'history', 'entertainment', 'sports']
 
 def create_app(test_config=None):
     app = Flask(__name__)
@@ -225,15 +225,14 @@ def create_app(test_config=None):
     @app.route('/quizzes', methods=['POST'])
     def play_quiz():
         body = request.get_json()
-        current_category = body.get('quiz_category', 'Science')
+        current_category = body.get('quiz_category', 'science')
         previous_questions = body.get('previous_questions', [])
         
-        category_list_lower = [category.lower() for category in CATEGORY_LIST]
-        if current_category.lower() not in category_list_lower:
+        if current_category.lower() not in CATEGORY_LIST:
             abort(404)
 
         try:
-            category_id = category_list_lower.index(current_category.lower()) + 1
+            category_id = CATEGORY_LIST.index(current_category.lower()) + 1
             question_list = Question.query.filter(Question.category == category_id, Question.id.notin_(previous_questions)).all()
             question = random.choice(question_list)
 
